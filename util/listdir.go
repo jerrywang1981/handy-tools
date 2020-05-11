@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+// list all files in the directory, you can also specify the suffix
+// so you can get the files of that type only
 func ListDir(dirPth string, suffix string) (files []string, err error) {
 	files = []string{} //make([]string, 0, 10)
 
