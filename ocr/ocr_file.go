@@ -3,6 +3,7 @@ package ocr
 import (
 	"io/ioutil"
 	"log"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -36,6 +37,11 @@ func RecognizeFile(filename, lang string) (string, error) {
 // RecognizeFolder ocr the files in the folder
 func RecognizeFolder(foldername, lang string) []*OcrResult {
 	result := []*OcrResult{}
+	folderName, err := filepath.Abs(foldername)
+	if err != nil {
+		log.Fatal(err)
+		return result
+	}
 	files, err := ioutil.ReadDir(foldername)
 	if err != nil {
 		log.Fatal(err)
@@ -52,16 +58,14 @@ func RecognizeFolder(foldername, lang string) []*OcrResult {
 	if count == 0 {
 		return result
 	}
-	ch := make(chan *OcrResult)
-	for _, name := range fileNames {
-		go func(filename string) {
-			text, err := RecognizeFile(filename, lang)
-			ch <- &OcrResult{FileName: filename, Text: text, Error: err}
-		}(name)
-	}
 
-	for i := 0; i < count; i++ {
-		result = append(result, <-ch)
+	client := gosseract.NewClient()
+	defer client.Close()
+	client.SetLanguage(lang)
+	for _, file := range fileNames {
+		client.SetImage(path.Join(folderName, file))
+		text, err := client.Text()
+		result = append(result, &OcrResult{FileName: file, Text: text, Error: err})
 	}
 
 	return result
