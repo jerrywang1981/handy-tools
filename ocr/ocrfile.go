@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/jerrywang1981/handy-tools/util"
-	"github.com/otiai10/gosseract"
+	"github.com/otiai10/gosseract/v2"
 )
 
 var (
