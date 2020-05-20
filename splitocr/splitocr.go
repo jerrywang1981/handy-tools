@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	dockerImageName = "jerrywang1981/text-detection-tf:splitocr0.0.2"
+	dockerImageName = "jerrywang1981/text-detection-tf:splitocr0.0.3"
 )
 
 func SplitOcr(folderName, resultFolderName string) error {
